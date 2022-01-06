@@ -1,0 +1,29 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#params {
+    position: absolute;
+    z-index: 2;
+    color: white;
+    width: 100%;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+#params a {
+    color: crimson;
+    text-decoration: none;
+}
+
+#params input {
+    width: 50px;
+}
