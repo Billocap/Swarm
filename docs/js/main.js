@@ -1,10 +1,12 @@
+import Boid from './lib/Boid.js';
+import warp from './utils/warp.js';
+
+/**
+ * @type {Boid[]}
+ */
 let boids = [];
 
-function randRange(min, max) {
-    return min + Math.random() * (max - min);
-}
-
-function createBoids() {
+window.createBoids = () => {
     const amount = parseFloat($("#part-amount").val());
 
     const massMin = parseFloat($("#mass-min").val());
@@ -22,47 +24,41 @@ function createBoids() {
         boids.push(
             new Boid(
                 createVector(
-                    randRange(0, windowWidth),
-                    randRange(0, windowHeight),
-                    randRange(0, windowHeight)
+                    random(0, windowWidth),
+                    random(0, windowHeight),
+                    random(0, windowHeight)
                 ),
-                randRange(massMin, massMax),
-                randRange(forceMin, forceMax),
-                randRange(speedMin, speedMax)
+                random(massMin, massMax),
+                random(forceMin, forceMax),
+                random(speedMin, speedMax)
             )
         );
     }
 }
 
-function setup() {
+window.setup = () => {
     createBoids();
 
     createCanvas(windowWidth, windowHeight);
 }
 
-function draw() {
+window.draw = () => {
     background(0);
 
     const target = createVector(mouseX, mouseY, windowHeight / 2);
 
     for (const boid of boids) {
-        // Makes particles be attracted to the mouse
-        const att = p5.Vector.sub(target, boid.position);
-        
-        // But repels them when the mouse is pressed.
-        if (mouseIsPressed) att.mult(-1);
-
-        boid.force(att);
-        //===================
+        if (mouseIsPressed) {
+            boid.flee(target);
+        } else {
+            boid.seek(target);
+        }
         
         // Causes the particles to warp on the edges.
-        if (boid.x < 0) boid.x = windowWidth - 1;
-        if (boid.y < 0) boid.y = windowHeight - 1;
-        if (boid.z < 0) boid.z = windowHeight - 1;
-        if (boid.x > windowWidth) boid.x = 0;
-        if (boid.y > windowHeight) boid.y = 0;
-        if (boid.z > windowHeight) boid.z = 0;
-        
+        boid.x = warp(boid.x, 0, windowWidth);
+        boid.y = warp(boid.y, 0, windowHeight);
+        boid.z = warp(boid.z, 0, windowHeight);
+
         // Draws particles
         push();
         translate(0, 0, boid.z);
@@ -77,6 +73,6 @@ function draw() {
     }
 }
 
-function windowResized() {
+window.windowResized = () => {
     resizeCanvas(windowWidth, windowHeight);
 }
