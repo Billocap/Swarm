@@ -2,41 +2,84 @@
  * Boids are simple autonomous agents capable o basic decision making.
  */
 class Boid {
+    /**
+     * Boids are simple autonomous agents capable o basic decision making.
+     * @param {Vector} [position] The initial position as a vector.
+     * @param {number} [mass] The boid's mass.
+     * @param {number} [maxForce] The maximum force this boid can be affected by.
+     * @param {number} [maxSpeed] he maximum velocity this boid can have.
+     */
     constructor(position, mass, maxForce, maxSpeed) {
-        this.mass = mass;
-        this.position = position;
-        
+        /**
+         * This boid's mass.
+         */
+        this.mass = mass || 1;
+        /**
+         * A vector representing the boid's position, only use this field
+         * for calculations that use vectors.
+         * @type {Vector}
+         */
+        this.position = position || new p5.Vector(0, 0, 0);
+        /**
+         * A vector representing the boid's velocity.
+         * @type {Vector}
+         */
         this.velocity = new p5.Vector(0, 0, 0);
-
-        this.maxForce = maxForce;
-        this.maxSpeed = maxSpeed;
+        /**
+         * The maximum force this boid can be affected by, values greater than
+         * this are set to this value.
+         */
+        this.maxForce = maxForce || 3;
+        /**
+         * The maximum velocity this boid can have, values greater than
+         * this are set to this value.
+         */
+        this.maxSpeed = maxSpeed || 5;
     }
 
-    // #region X
+    // #region X coord
+    /**
+     * Boid's x coordinate.
+     */
     get x() {
         return this.position.x;
     }
 
+    /**
+     * Boid's x coordinate.
+     */
     set x(value) {
         this.position.x = value;
     }
     // #endregion
 
-    // #region Y
+    // #region Y coord
+    /**
+     * Boid's y coordinate.
+     */
     get y() {
         return this.position.y;
     }
 
+    /**
+     * Boid's y coordinate.
+     */
     set y(value) {
         this.position.y = value;
     }
     // #endregion
 
-    // #region Z
+    // #region Z coord
+    /**
+     * Boid's z coordinate.
+     */
     get z() {
         return this.position.z;
     }
 
+    /**
+     * Boid's z coordinate.
+     */
     set z(value) {
         this.position.z = value;
     }
@@ -47,16 +90,13 @@ class Boid {
      * @param {Vector} force The force vector.
      */
     force(force) {
-        // Makes sure the force isn't too strong.
         force.limit(this.maxForce);
 
-        // Calculates the acceleration vector.
+        // F = m * a therefor a = F / m.
         const acceleration = force.div(this.mass);
 
-        // Applies the acceleration vector and limits velocity.
         this.velocity.add(acceleration).limit(this.maxSpeed);
 
-        // Apply velocity.
         this.position.add(this.velocity);
     }
 
@@ -68,7 +108,6 @@ class Boid {
         // Calculates the force necessary to correct the trajectory.
         const steering = p5.Vector.sub(direction, this.velocity);
 
-        // Applies the force.
         this.force(steering);
     }
 
@@ -77,11 +116,13 @@ class Boid {
      * @param {Vector} target A vector representing the position.
      */
     seek(target) {
-        // Gets a vector pointing from this object to the target.
+        // Vector from this.position -> target.
         const correction = p5.Vector.sub(target, this.position);
 
-        // Corrects the magnitude of the vector and steers towards it.
-        this.steer(correction.setMag(this.maxSpeed));
+        // This vector should always be equal to maxSpeed.
+        correction.setMag(this.maxSpeed);
+
+        this.steer(correction);
     }
 
     /**
@@ -89,11 +130,35 @@ class Boid {
      * @param {Vector} target A vector representing the position.
      */
     flee(target) {
-        // Gets a vector pointing from the target to this object.
+        // Vector from target -> this.position.
         const correction = p5.Vector.sub(this.position, target);
 
-        // Corrects the magnitude of the vector and steers towards it.
-        this.steer(correction.setMag(this.maxSpeed));
+        // This vector should always be equal to maxSpeed.
+        correction.setMag(this.maxSpeed);
+
+        this.steer(correction);
+    }
+
+    /**
+     * Makes the boid move towards a position in space and slow down as it
+     * approaches the target.
+     * 
+     * The slowing behavior only happen if the distance from the boid to the
+     * target is less than the stopping radius.
+     * @param {Vector} target A vector representing the position.
+     * @param {number} [radius] The stopping radius.
+     */
+    arrive(target, radius = 5) {
+        // Vector from this.position -> target.
+        const correction = p5.Vector.sub(target, this.position);
+
+        // Slows down the boid in a way proportional to the stopping radius.
+        const slowingSpeed = this.maxSpeed / radius;
+
+        correction.mult(slowingSpeed);
+        //===============================
+
+        this.steer(correction);
     }
 }
 

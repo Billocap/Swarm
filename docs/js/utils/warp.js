@@ -1,3 +1,8 @@
+/*
+ * Implemented coordinate warping as a mathematical function so that too many
+ * "if statements" are avoided and the values actually reflect the warping 
+ * effect better.
+*/
 const { sign } = Math;
 
 /**
@@ -8,7 +13,7 @@ const { sign } = Math;
  * @returns The warped value.
  */
 function warp(x, min, max) {
-    //Bounds the function between min and max.
+    // Bounds the function between min and max.
     const _x = x - min;
     const length = max - min;
     //======================
@@ -16,9 +21,10 @@ function warp(x, min, max) {
     // Avoids repetition and makes the equation more clean.
     const f = length / 2;
     const m = _x % length;
-    //============================
+    //======================
 
-    // warp(x, n) = sign(x) * ((x % n) - n / 2) + n / 2;
+    //Full equation
+    // warp(x, a, b) = sign(x - a) * ((x % (b - a)) - (b - a) / 2) + (b - a) / 2;
     return sign(_x) * (m - f) + f;
 }
 

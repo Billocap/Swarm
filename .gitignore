@@ -4,5 +4,5 @@ yarn.lock
 package-lock.json
 
 # development
-/design
+/notes
 /test

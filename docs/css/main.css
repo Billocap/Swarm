@@ -10,6 +10,14 @@ body {
     overflow: hidden;
 }
 
+#credit {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    color: white;
+    text-decoration: none;
+}
+
 #params {
     position: absolute;
     z-index: 2;
@@ -24,6 +32,6 @@ body {
     text-decoration: none;
 }
 
-#params input {
+#params input[type="number"] {
     width: 50px;
 }

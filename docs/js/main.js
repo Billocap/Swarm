@@ -1,12 +1,12 @@
-import Boid from './lib/Boid.js';
+import Flock from './lib/Flock.js';
 import warp from './utils/warp.js';
 
 /**
- * @type {Boid[]}
+ * @type {Flock}
  */
-let boids = [];
+let flock;
 
-window.createBoids = () => {
+window.createFlock = () => {
     const amount = parseFloat($("#part-amount").val());
 
     const massMin = parseFloat($("#mass-min").val());
@@ -18,51 +18,50 @@ window.createBoids = () => {
     const speedMin = parseFloat($("#speed-min").val());
     const speedMax = parseFloat($("#speed-max").val());
 
-    boids = [];
+    flock = new Flock(amount);
 
-    for (let i = 0; i < amount; i++) {
-        boids.push(
-            new Boid(
-                createVector(
-                    random(0, windowWidth),
-                    random(0, windowHeight),
-                    random(0, windowHeight)
-                ),
-                random(massMin, massMax),
-                random(forceMin, forceMax),
-                random(speedMin, speedMax)
-            )
-        );
+    for(const boid of flock) {
+        boid.x = random(0, windowWidth);
+        boid.y = random(0, windowHeight);
+        boid.z = random(0, windowHeight);
+
+        boid.mass = random(massMin, massMax);
+        boid.maxSpeed = random(speedMin, speedMax);
+        boid.maxForce = random(forceMin, forceMax);
     }
 }
 
 window.setup = () => {
-    createBoids();
+    createFlock();
 
     createCanvas(windowWidth, windowHeight);
 }
 
 window.draw = () => {
     background(0);
+    noStroke();
 
     const target = createVector(mouseX, mouseY, windowHeight / 2);
+    const arrive = $("#behavior").is(":checked");
 
-    for (const boid of boids) {
+    for (const boid of flock) {
         if (mouseIsPressed) {
             boid.flee(target);
         } else {
-            boid.seek(target);
+            if (arrive) {
+                boid.arrive(target, 25);
+            } else {
+                boid.seek(target);
+            }
         }
         
-        // Causes the particles to warp on the edges.
         boid.x = warp(boid.x, 0, windowWidth);
         boid.y = warp(boid.y, 0, windowHeight);
         boid.z = warp(boid.z, 0, windowHeight);
 
-        // Draws particles
+        // Draws particles respecting their z coordinate.
         push();
         translate(0, 0, boid.z);
-        noStroke();
         fill(
             map(boid.x, 0, windowWidth, 20, 250),
             map(boid.y, 0, windowHeight, 20, 250),
@@ -70,6 +69,7 @@ window.draw = () => {
         );
         circle(boid.x, boid.y, PI * boid.mass);
         pop();
+        //==============================
     }
 }
 
