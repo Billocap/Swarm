@@ -6,6 +6,17 @@ import warp from './utils/warp.js';
  */
 let flock;
 
+$("#hover").click(
+    function() {
+        $(this)
+            .toggleClass("open")
+            .children("i")
+                .toggleClass("open");
+
+        $("#menu").toggleClass("open");
+    }
+);
+
 window.createFlock = () => {
     const amount = parseFloat($("#part-amount").val());
 
@@ -38,7 +49,7 @@ window.setup = () => {
 }
 
 window.draw = () => {
-    background(0);
+    background(31);
     noStroke();
 
     const target = createVector(mouseX, mouseY, windowHeight / 2);

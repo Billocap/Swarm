@@ -1,6 +1,13 @@
 import Boid from "./Boid.js";
 
+/**
+ * Controls the behavior of multiple boids.
+ * @extends Set
+ */
 class Flock extends Set {
+    /**
+     * @param {number} size Number of boids the flock starts with.
+     */
     constructor(size = 0) {
         const boids = [];
 
@@ -11,7 +18,11 @@ class Flock extends Set {
         super(boids);
     }
 
-    toArray() {
+    /**
+     * Returns an array containing all the boids in this flock.
+     * @returns {Boid[]} Array of boids.
+     */
+    boids() {
         return Array.from(this);
     }
 }

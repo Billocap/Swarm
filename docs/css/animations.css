@@ -1,0 +1,17 @@
+@keyframes slide {
+    from {
+        width: 20px;
+    }
+
+    to {
+        width: 320px;
+    }
+}
+
+.slide-in {
+    animation: slide 0.2s ease-out both;
+}
+
+.slide-out {
+    animation: slide reverse 0.2s ease-in both;
+}

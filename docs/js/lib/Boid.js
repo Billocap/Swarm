@@ -3,8 +3,7 @@
  */
 class Boid {
     /**
-     * Boids are simple autonomous agents capable o basic decision making.
-     * @param {Vector} [position] The initial position as a vector.
+     * @param {p5.Vector} [position] The initial position as a vector.
      * @param {number} [mass] The boid's mass.
      * @param {number} [maxForce] The maximum force this boid can be affected by.
      * @param {number} [maxSpeed] he maximum velocity this boid can have.
@@ -17,12 +16,12 @@ class Boid {
         /**
          * A vector representing the boid's position, only use this field
          * for calculations that use vectors.
-         * @type {Vector}
+         * @type {p5.Vector}
          */
         this.position = position || new p5.Vector(0, 0, 0);
         /**
          * A vector representing the boid's velocity.
-         * @type {Vector}
+         * @type {p5.Vector}
          */
         this.velocity = new p5.Vector(0, 0, 0);
         /**
@@ -87,7 +86,7 @@ class Boid {
 
     /**
      * Applies a force vector to the boid.
-     * @param {Vector} force The force vector.
+     * @param {p5.Vector} force The force vector.
      */
     force(force) {
         force.limit(this.maxForce);
@@ -102,7 +101,7 @@ class Boid {
 
     /**
      * Applies a force that steers the boid in a certain direction.
-     * @param {Vector} direction Desired direction.
+     * @param {p5.Vector} direction Desired direction.
      */
     steer(direction) {
         // Calculates the force necessary to correct the trajectory.
@@ -113,7 +112,7 @@ class Boid {
 
     /**
      * Makes the boid move towards a position in space.
-     * @param {Vector} target A vector representing the position.
+     * @param {p5.Vector} target A vector representing the position.
      */
     seek(target) {
         // Vector from this.position -> target.
@@ -127,7 +126,7 @@ class Boid {
 
     /**
      * Makes the boid move away from a position in space.
-     * @param {Vector} target A vector representing the position.
+     * @param {p5.Vector} target A vector representing the position.
      */
     flee(target) {
         // Vector from target -> this.position.
@@ -145,7 +144,7 @@ class Boid {
      * 
      * The slowing behavior only happen if the distance from the boid to the
      * target is less than the stopping radius.
-     * @param {Vector} target A vector representing the position.
+     * @param {p5.Vector} target A vector representing the position.
      * @param {number} [radius] The stopping radius.
      */
     arrive(target, radius = 5) {
