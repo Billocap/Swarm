@@ -2,7 +2,7 @@ import Boid from "./Boid.js";
 
 /**
  * Controls the behavior of multiple boids.
- * @extends Set
+ * @extends Set<Boid>
  */
 class Flock extends Set {
     /**

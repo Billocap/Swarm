@@ -5,6 +5,7 @@ import warp from './utils/warp.js';
  * @type {Flock}
  */
 let flock;
+let sprite;
 
 $("#hover").click(
     function() {
@@ -29,6 +30,8 @@ window.createFlock = () => {
     const speedMin = parseFloat($("#speed-min").val());
     const speedMax = parseFloat($("#speed-max").val());
 
+    sprite = $("#boid-shape").val();
+
     flock = new Flock(amount);
 
     for(const boid of flock) {
@@ -50,7 +53,13 @@ window.setup = () => {
 
 window.draw = () => {
     background(31);
-    noStroke();
+    const drawBorder = $("#draw-border").is(":checked");
+
+    if (drawBorder) {
+        strokeWeight(2);
+    } else {
+        strokeWeight(0);
+    }
 
     const target = createVector(mouseX, mouseY, windowHeight / 2);
     const arrive = $("#behavior").is(":checked");
@@ -72,13 +81,31 @@ window.draw = () => {
 
         // Draws particles respecting their z coordinate.
         push();
-        translate(0, 0, boid.z);
-        fill(
-            map(boid.x, 0, windowWidth, 20, 250),
-            map(boid.y, 0, windowHeight, 20, 250),
-            map(boid.z, 0, windowHeight, 20, 250)
-        );
-        circle(boid.x, boid.y, PI * boid.mass);
+            fill(
+                map(boid.x, 0, windowWidth, 20, 250),
+                map(boid.y, 0, windowHeight, 20, 250),
+                map(boid.z, 0, windowHeight, 20, 250)
+            );
+            stroke(
+                map(boid.x, 0, windowWidth, 0, 200),
+                map(boid.y, 0, windowHeight, 0, 200),
+                map(boid.z, 0, windowHeight, 0, 200)
+            );
+            
+            translate(boid.x, boid.y, boid.z);
+            rotate(boid.velocity.heading());
+            scale(boid.mass / 5);
+
+            if (sprite == "arrow") {
+                beginShape();
+                    vertex(10, 0);
+                    vertex(-3, 6);
+                    vertex(0, 0);
+                    vertex(-3, -6);
+                endShape();
+            } else {
+                circle(0, 0, 10);
+            }
         pop();
         //==============================
     }
