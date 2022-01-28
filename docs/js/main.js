@@ -1,4 +1,6 @@
-import Flock from './lib/Flock.js';
+import * as Model from './lib/model.js';
+import * as View from './lib/view.js';
+
 import warp from './utils/warp.js';
 
 /**
@@ -6,17 +8,32 @@ import warp from './utils/warp.js';
  */
 let flock;
 let sprite;
+let renderer;
 
-$("#hover").click(
-    function() {
-        $(this)
-            .toggleClass("open")
-            .children("i")
-                .toggleClass("open");
-
-        $("#menu").toggleClass("open");
+let sprites = {
+    arrow() {
+        beginShape();
+            vertex(10, 0);
+            vertex(-3, 6);
+            vertex(0, 0);
+            vertex(-3, -6);
+        endShape();
+    },
+    circle() {
+        circle(0, 0, 10);
     }
-);
+};
+
+// $("#hover").click(
+//     function() {
+//         $(this)
+//             .toggleClass("open")
+//             .children("i")
+//                 .toggleClass("open");
+
+//         $("#menu").toggleClass("open");
+//     }
+// );
 
 window.createFlock = () => {
     const amount = parseFloat($("#part-amount").val());
@@ -32,7 +49,7 @@ window.createFlock = () => {
 
     sprite = $("#boid-shape").val();
 
-    flock = new Flock(amount);
+    flock = new Model.Flock(amount);
 
     for(const boid of flock) {
         boid.x = random(0, windowWidth);
@@ -43,11 +60,13 @@ window.createFlock = () => {
         boid.maxSpeed = random(speedMin, speedMax);
         boid.maxForce = random(forceMin, forceMax);
     }
+
+    renderer = new View.Flock(sprites[sprite]);
 }
 
 window.setup = () => {
     createFlock();
-
+    
     createCanvas(windowWidth, windowHeight);
 }
 
@@ -79,35 +98,7 @@ window.draw = () => {
         boid.y = warp(boid.y, 0, windowHeight);
         boid.z = warp(boid.z, 0, windowHeight);
 
-        // Draws particles respecting their z coordinate.
-        push();
-            fill(
-                map(boid.x, 0, windowWidth, 20, 250),
-                map(boid.y, 0, windowHeight, 20, 250),
-                map(boid.z, 0, windowHeight, 20, 250)
-            );
-            stroke(
-                map(boid.x, 0, windowWidth, 0, 200),
-                map(boid.y, 0, windowHeight, 0, 200),
-                map(boid.z, 0, windowHeight, 0, 200)
-            );
-            
-            translate(boid.x, boid.y, boid.z);
-            rotate(boid.velocity.heading());
-            scale(boid.mass / 5);
-
-            if (sprite == "arrow") {
-                beginShape();
-                    vertex(10, 0);
-                    vertex(-3, 6);
-                    vertex(0, 0);
-                    vertex(-3, -6);
-                endShape();
-            } else {
-                circle(0, 0, 10);
-            }
-        pop();
-        //==============================
+        renderer.draw(boid);
     }
 }
 

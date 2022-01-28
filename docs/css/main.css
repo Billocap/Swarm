@@ -20,8 +20,15 @@ button {
 
 #overlay {
     position: absolute;
+    background: transparent;
     width: 100%;
     height: 100%;
+}
+
+#tool-bar {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
 }
 
 #credit {
@@ -30,90 +37,10 @@ button {
     bottom: 10px;
     text-decoration: none;
     font-weight: bold;
-    color: white;
 }
 
-#credit span {
+#credit i {
     color: white;
     transition: color 0.2s;
-}
-
-#credit:hover span {
-    color: crimson;
-}
-
-#menu {
-    position: relative;
-    resize: horizontal;
-    width: 20px;
-    height: 100%;
-    color: black;
-    background: transparent;
-    transition: width 0.2s ease-out;
-}
-
-#menu.open {
-    width: 320px;
-}
-
-#menu a {
-    color: crimson;
-    text-decoration: none;
-}
-
-#menu input[type="number"] {
-    width: 50px;
-}
-
-#menu #form, #menu #hover {
-    height: 100%;
-    position: absolute;
-}
-
-#menu #form {
-    padding: 10px;
-    right: 20px;
-    width: 300px;
-    background: rgba(243, 243, 243, 100%);
-    transition: width 0.2s ease-out;
-}
-
-#menu #form .param {
-    width: 100%;
-    padding: 5px;
-}
-
-#menu #hover {
-    width: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: rgb(243, 243, 243, 15%);
-    border: none;
-    border-left: solid 1px rgb(192, 192, 192, 15%);
-    transition: background 0.2s, border-left 0.2s;
-    right: 0;
-    cursor: pointer;
-}
-
-#menu #hover.open {
-    border-left: solid 1px rgb(192, 192, 192, 100%);
-    background: rgba(255, 255, 255, 100%);
-}
-
-#menu #hover i {
-    position: absolute;
-    font-size: 15px;
-    line-height: 15px;
-    text-align: center;
-    width: 15px;
-    height: 15px;
-    transform: rotate(0deg);
-    color: rgba(243, 243, 243);
-    transition: transform 0.2s, color 0.2s;
-}
-
-#menu #hover i.open {
-    color:rgb(160, 160, 160);
-    transform: rotate(180deg);
+    font-size: 25px;
 }
