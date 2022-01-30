@@ -3,12 +3,12 @@ import * as View from './lib/view.js';
 
 import warp from './utils/warp.js';
 
-/**
- * @type {Flock}
- */
-let flock;
 let sprite;
 let renderer;
+let id = 0;
+
+const flocks = new Map();
+const renderers = new Set();
 
 let sprites = {
     arrow() {
@@ -24,18 +24,8 @@ let sprites = {
     }
 };
 
-// $("#hover").click(
-//     function() {
-//         $(this)
-//             .toggleClass("open")
-//             .children("i")
-//                 .toggleClass("open");
-
-//         $("#menu").toggleClass("open");
-//     }
-// );
-
 window.createFlock = () => {
+    const flockName = `flock ${id}`;
     const amount = parseFloat($("#part-amount").val());
 
     const massMin = parseFloat($("#mass-min").val());
@@ -49,7 +39,7 @@ window.createFlock = () => {
 
     sprite = $("#boid-shape").val();
 
-    flock = new Model.Flock(amount);
+    let flock = new Model.Flock(amount);
 
     for(const boid of flock) {
         boid.x = random(0, windowWidth);
@@ -62,6 +52,21 @@ window.createFlock = () => {
     }
 
     renderer = new View.Flock(sprites[sprite]);
+    
+    flocks.set(flockName, flock);
+    renderers.add(renderer);
+
+    $("#flocks").append(
+        $(`<div class="clearfix">flock ${id}</div>`).append(
+            $('<a href="#" class="float-end">delete</a>').click(function() {
+                flocks.delete(flockName);
+
+                document.querySelector("#flocks").removeChild(this.parentNode);
+            })
+        )
+    );
+
+    id++;
 }
 
 window.setup = () => {
@@ -83,22 +88,24 @@ window.draw = () => {
     const target = createVector(mouseX, mouseY, windowHeight / 2);
     const arrive = $("#behavior").is(":checked");
 
-    for (const boid of flock) {
-        if (mouseIsPressed) {
-            boid.flee(target);
-        } else {
-            if (arrive) {
-                boid.arrive(target, 25);
+    for (const [_, flock] of flocks) {
+        for (const boid of flock) {
+            if (mouseIsPressed) {
+                boid.flee(target);
             } else {
-                boid.seek(target);
+                if (arrive) {
+                    boid.arrive(target, 25);
+                } else {
+                    boid.seek(target);
+                }
             }
+            
+            boid.x = warp(boid.x, 0, windowWidth);
+            boid.y = warp(boid.y, 0, windowHeight);
+            boid.z = warp(boid.z, 0, windowHeight);
+    
+            renderer.draw(boid);
         }
-        
-        boid.x = warp(boid.x, 0, windowWidth);
-        boid.y = warp(boid.y, 0, windowHeight);
-        boid.z = warp(boid.z, 0, windowHeight);
-
-        renderer.draw(boid);
     }
 }
 

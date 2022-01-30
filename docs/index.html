@@ -25,9 +25,44 @@
 
     <body>
         <div id="overlay">
+            <div id="config" class="offcanvas offcanvas-start">
+                <div class="offcanvas-header border-bottom">
+                    <h1 class="offcanvas-title">Configurations</h1>
+                    <button
+                    type="button"
+                    class="btn-close text-reset"
+                    data-bs-dismiss="offcanvas"
+                    ></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="param mt-2"  title="Toggles the arrive behavior">
+                        <input type="checkbox" id="behavior"/>
+                        Slow Arrive
+                    </div>
+
+                    <div class="param" title="Draws the boids with a border">
+                        <input type="checkbox" id="draw-border" checked/>
+                        Border
+                    </div>
+                </div>
+            </div>
+
+            <div id="edit" class="offcanvas offcanvas-start">
+                <div class="offcanvas-header border-bottom">
+                    <h1 class="offcanvas-title">Manage Flocks</h1>
+                    <button
+                    type="button"
+                    class="btn-close text-reset"
+                    data-bs-dismiss="offcanvas"
+                    ></button>
+                </div>
+                <div id="flocks" class="offcanvas-body">
+                </div>
+            </div>
+
             <div id="menu" class="offcanvas offcanvas-start">
                 <div class="offcanvas-header border-bottom">
-                    <h1 class="offcanvas-title">Edit Flock</h1>
+                    <h1 class="offcanvas-title">Create Flock</h1>
                     <button
                         type="button"
                         class="btn-close text-reset"
@@ -35,6 +70,11 @@
                     ></button>
                 </div>
                 <div id="form" class="offcanvas-body">
+                    <div class="param">
+                        Name:
+                        <input id="flock-name" value="flock" disabled/>
+                    </div>
+
                     <div class="param">
                         Amount:
                         <input
@@ -136,18 +176,8 @@
                     </div>
 
                     <button onclick="createFlock()" title="Apply the changes">
-                        Reset
+                        Create
                     </button>
-
-                    <div class="param mt-2"  title="Toggles the arrive behavior">
-                        <input type="checkbox" id="behavior"/>
-                        Slow Arrive
-                    </div>
-
-                    <div class="param" title="Draws the boids with a border">
-                        <input type="checkbox" id="draw-border" checked/>
-                        Border
-                    </div>
                 </div>
             </div>
 
@@ -189,14 +219,49 @@
             </div>
 
             <div id="tool-bar" class="btn-group">
+                <div class="btn-group">
+                    <button
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        class="btn btn-light"
+                        title="Flocks"
+                    >
+                        <i class="fas fa-location-arrow"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <b class="dropdown-header">Create</b>
+                        </li> 
+                        <li>
+                            <a
+                                class="dropdown-item"
+                                href="#"
+                                data-bs-toggle="offcanvas"
+                                data-bs-target="#menu"
+                            >
+                                <i class="fas fa-plus"></i> Create
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                class="dropdown-item"
+                                href="#"
+                                data-bs-toggle="offcanvas"
+                                data-bs-target="#edit"
+                            >
+                                <i class="fas fa-bars"></i> Manage
+                            </a>
+                        </li>
+                    </ul>
+                </div>
                 <button
                     type="button"
                     data-bs-toggle="offcanvas"
-                    data-bs-target="#menu"
+                    data-bs-target="#config"
                     class="btn btn-light"
-                    title="Edit Flock"
+                    title="Config"
                 >
-                    <i class="fas fa-location-arrow"></i>
+                    <i class="fas fa-cog"></i>
                 </button>
                 <button
                     type="button"
@@ -209,14 +274,6 @@
                 </button>
             </div>
         </div>
-
-        <script>
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-              return new bootstrap.Tooltip(tooltipTriggerEl)
-            })
-        </script>
 
         <script type="module" src="./js/main.js"></script>
     </body>
