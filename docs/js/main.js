@@ -4,11 +4,10 @@ import * as View from './lib/view.js';
 import warp from './utils/warp.js';
 
 let sprite;
-let renderer;
 let id = 0;
 
 const flocks = new Map();
-const renderers = new Set();
+const renderers = new Map();
 
 let sprites = {
     arrow() {
@@ -51,10 +50,10 @@ window.createFlock = () => {
         boid.maxForce = random(forceMin, forceMax);
     }
 
-    renderer = new View.Flock(sprites[sprite]);
+    let renderer = new View.Flock(sprites[sprite]);
     
     flocks.set(flockName, flock);
-    renderers.add(renderer);
+    renderers.set(flockName, renderer);
 
     $("#flocks").append(
         $(`<div class="clearfix">flock ${id}</div>`).append(
@@ -88,7 +87,7 @@ window.draw = () => {
     const target = createVector(mouseX, mouseY, windowHeight / 2);
     const arrive = $("#behavior").is(":checked");
 
-    for (const [_, flock] of flocks) {
+    for (const [flockName, flock] of flocks) {
         for (const boid of flock) {
             if (mouseIsPressed) {
                 boid.flee(target);
@@ -104,7 +103,7 @@ window.draw = () => {
             boid.y = warp(boid.y, 0, windowHeight);
             boid.z = warp(boid.z, 0, windowHeight);
     
-            renderer.draw(boid);
+            renderers.get(flockName).draw(boid);
         }
     }
 }
