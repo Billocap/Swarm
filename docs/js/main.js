@@ -24,7 +24,7 @@ let sprites = {
 };
 
 window.createFlock = () => {
-    const flockName = `flock ${id}`;
+    const flockName = $("#flock-name").val();
     const amount = parseFloat($("#part-amount").val());
 
     const massMin = parseFloat($("#mass-min").val());
@@ -37,6 +37,14 @@ window.createFlock = () => {
     const speedMax = parseFloat($("#speed-max").val());
 
     sprite = $("#boid-shape").val();
+
+    console.log(flockName, flocks.has(flockName));
+
+    if (flocks.has(flockName)) {
+        alert(`Flock "${flockName}" already exists.`);
+
+        return;
+    }
 
     let flock = new Model.Flock(amount);
 
@@ -56,7 +64,7 @@ window.createFlock = () => {
     renderers.set(flockName, renderer);
 
     $("#flocks").append(
-        $(`<div class="clearfix">flock ${id}</div>`).append(
+        $(`<div class="clearfix">${flockName}</div>`).append(
             $('<a href="#" class="float-end">delete</a>').click(function() {
                 flocks.delete(flockName);
 
